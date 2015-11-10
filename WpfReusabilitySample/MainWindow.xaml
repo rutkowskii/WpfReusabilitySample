@@ -1,0 +1,46 @@
+﻿<Window x:Class="WpfReusabilitySample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfReusabilitySample"
+        mc:Ignorable="d"
+        Title="MainWindow" MinHeight="350" MinWidth="200"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Grid>
+        <StackPanel>
+            <Button Content="CZYSZCZENIE" Command="{Binding CleanCommand}" Height="30" Width="200" Margin="10"/>
+            <Button Content="ŁADOWANIE" Command="{Binding LoadCommand}" Height="30" Width="200" Margin="10" />
+            <Button Content="ANULOWANIE" Command="{Binding CancelCommand}" Height="30" Width="200" Margin="10" />
+            <local:PrContainer Background="Brown" Title="{Binding Title1}">
+                <local:PrContainer.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="White" BorderThickness="2">
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="{Binding Name}" Margin="0 0 10 0"></Label>
+                                <Label Content="{Binding Nickname}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </local:PrContainer.ItemTemplate>
+                
+            </local:PrContainer>
+
+            <local:PrContainer Background="Green" Title="{Binding Title2}">
+                <local:PrContainer.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Fuchsia" BorderThickness="2">
+                            <StackPanel Orientation="Horizontal" Background="Yellow">
+                                <Label Content="{Binding Name}" Margin="0 0 10 0"></Label>
+                                <Label Content="{Binding Nickname}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </local:PrContainer.ItemTemplate>
+                
+            </local:PrContainer>
+        </StackPanel>
+    </Grid>
+</Window>
+
+    
