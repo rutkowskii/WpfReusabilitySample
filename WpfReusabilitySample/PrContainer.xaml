@@ -6,24 +6,30 @@
              xmlns:local="clr-namespace:WpfReusabilitySample"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="controlRoot">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisConverter" />
+    </UserControl.Resources>
     <DockPanel LastChildFill="True" Width="800" Height="200" Background="{Binding ElementName=controlRoot, Path=Background}">
      
             <Label DockPanel.Dock="Top" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding ElementName=controlRoot, Path=Title}" />
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
-            <ItemsControl ItemsSource="{Binding CatsCollection}" ItemTemplate="{Binding ElementName=controlRoot, Path=ItemTemplate}">
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <Border BorderBrush="Black" BorderThickness="5">
-                            <ItemsPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Width="800"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <Grid>
+                <TextBlock Text="PUSTO" Foreground="White" Margin="20 20 0 0" Visibility="{Binding NoCat, Converter={StaticResource booleanToVisConverter}}"/>
+                <ItemsControl ItemsSource="{Binding CatsCollection}" ItemTemplate="{Binding ElementName=controlRoot, Path=ItemTemplate}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <Border BorderBrush="Black" BorderThickness="5">
+                                <ItemsPresenter/>
+                            </Border>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Width="800"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
         </ScrollViewer>
     </DockPanel>
 </UserControl>

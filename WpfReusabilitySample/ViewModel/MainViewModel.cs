@@ -6,45 +6,12 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using WpfReusabilitySample.Services;
+using WpfReusabilitySample.Utils;
 
 namespace WpfReusabilitySample.ViewModel
 {
 
-    public class AsyncAction : ObservableObject
-    {
-        private Action _a;
-        private CancellationTokenSource _cts;
-
-        public AsyncAction(Action a)
-        {
-            _a = a;
-            _cts = new CancellationTokenSource();
-        }
-
-        public void Run()
-        {
-            IsRunning = true;
-            Task.Run(_a, _cts.Token);
-        }
-        public void Cancel()
-        {
-            _cts.Cancel();
-            IsRunning = false;
-        }
-
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-            private set
-            {
-                _isRunning = value;
-                RaisePropertyChanged("IsRunning");
-            }
-        }
-
-
-    }
+   
 
    
     public class MainViewModel : ViewModelBase
@@ -58,11 +25,12 @@ namespace WpfReusabilitySample.ViewModel
             Title1 = "TO JEST TYTUŁ NR 11111111";
             _iCatsService = ics;
 
-            _loadAction = new AsyncAction(() =>
+            _loadAction = new AsyncAction((ct) =>
             {
                 foreach (var cat in _iCatsService.GetAll())
                 {
-                    App.Current.Dispatcher.Invoke((Action)delegate
+                    ct.ThrowIfCancellationRequested();
+                    App.Current.Dispatcher.Invoke(delegate
                     {
                         CatsCollection.Add(cat);
                     });
@@ -72,9 +40,20 @@ namespace WpfReusabilitySample.ViewModel
 
             Title2 = "TO JEST TYTUŁ NR 22222222";
             CatsCollection = new ObservableCollection<Cat>();
+            CatsCollection.CollectionChanged += CatsCollection_CollectionChanged;
             CleanCommand = new RelayCommand(CleanCatsCollections);
             LoadCommand = new RelayCommand(LoadCats, () => !_loadAction.IsRunning);
             CancelCommand = new RelayCommand(() => _loadAction.Cancel(), () => _loadAction.IsRunning);
+        }
+
+        private void CatsCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("NoCat");
+        }
+
+        public bool NoCat
+        {
+            get { return CatsCollection.Count == 0; }
         }
 
         private void _loadAction_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
