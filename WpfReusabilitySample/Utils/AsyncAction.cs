@@ -19,11 +19,23 @@ namespace WpfReusabilitySample.Utils
 
         }
 
-        public void Run()
+        public async void Run()
         {
             IsRunning = true;
             _cts = new CancellationTokenSource();
-            Task.Run(() => _a(_cts.Token));
+            await Task.Run(() => {
+                try {
+                    _a(_cts.Token);
+                }catch(OperationCanceledException e)
+                {
+                    if(OnCancel != null) OnCancel(this, new EventArgs());
+                }
+                finally
+                {
+                    _cts.Dispose();
+                }
+            });
+            IsRunning = false;
         }
         public void Cancel()
         {
@@ -41,6 +53,8 @@ namespace WpfReusabilitySample.Utils
                 RaisePropertyChanged("IsRunning");
             }
         }
+
+        public event EventHandler OnCancel;
 
 
     }

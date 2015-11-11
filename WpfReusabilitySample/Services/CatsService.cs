@@ -19,7 +19,7 @@ namespace WpfReusabilitySample.Services
 
             
 
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Thread.Sleep(1000);
                 yield return new Cat { Name = "RUMCAJS", Nickname = "FAJNY KOT" };
